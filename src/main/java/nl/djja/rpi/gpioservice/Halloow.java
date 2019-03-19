@@ -1,4 +1,33 @@
 package nl.djja.rpi.gpioservice;
 
+import nl.djja.rpi.gpioservice.iopincontrol.IOPinState;
+import nl.djja.rpi.gpioservice.services.GPIOService;
+import nl.djja.rpi.gpioservice.services.GPIOServiceImpl;
+
 public class Halloow {
+
+    public static void main(String[] args) {
+        GPIOService gpioService = new GPIOServiceImpl();
+
+        int count = 0;
+        while (count < 15) {
+            gpioService.write(26, IOPinState.HIGH);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            gpioService.write(26, IOPinState.LOW);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            count++;
+        }
+    }
 }

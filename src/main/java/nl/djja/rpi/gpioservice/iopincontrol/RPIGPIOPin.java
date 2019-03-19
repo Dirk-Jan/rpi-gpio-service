@@ -1,5 +1,6 @@
 package nl.djja.rpi.gpioservice.iopincontrol;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,11 +23,25 @@ public class RPIGPIOPin implements IOPinControl {
     }
 
     public void open() {
-        writeInteger("/sys/class/gpio/export", pinNumber);
+        File pin = new File("/sys/class/gpio/gpio" + pinNumber);
+        if (!pin.exists()) {
+            writeInteger("/sys/class/gpio/export", pinNumber);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Per default the direction is to output
+        setDirection(IOPinDirection.OUTPUT);
     }
 
     public void close() {
-        writeInteger("/sys/class/gpio/unexport", pinNumber);
+        File pin = new File("/sys/class/gpio/gpio" + pinNumber);
+        if (pin.exists() && pin.isDirectory()) {
+            writeInteger("/sys/class/gpio/unexport", pinNumber);
+        }
     }
 
     public void setDirection(IOPinDirection direction) {
@@ -42,6 +57,7 @@ public class RPIGPIOPin implements IOPinControl {
             state = (file.read() == 1 ? IOPinState.LOW : IOPinState.HIGH);
         } catch (IOException e) {   // TODO Throw errors!
 //            Logger.printThrowable(e);
+            System.out.println(e.getMessage());
         }
 
         return state;
@@ -52,13 +68,7 @@ public class RPIGPIOPin implements IOPinControl {
     }
 
     private void writeInteger(String path, int value) {
-        try (
-                FileOutputStream file = new FileOutputStream(path)
-        ) {
-            file.write(value);
-        } catch (IOException e) {
-//            Logger.printThrowable(e);
-        }
+        writeString(path, Integer.toString(value));
     }
 
     private void writeString(String path, String value) {
@@ -68,6 +78,7 @@ public class RPIGPIOPin implements IOPinControl {
             file.write(value.getBytes());
         } catch (IOException e) {
 //            Logger.printThrowable(e);
+            System.out.println(e.getMessage());
         }
     }
 }
