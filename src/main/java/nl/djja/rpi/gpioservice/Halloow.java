@@ -1,5 +1,6 @@
 package nl.djja.rpi.gpioservice;
 
+import nl.djja.rpi.gpioservice.exceptions.IOPinManipulationException;
 import nl.djja.rpi.gpioservice.iopincontrol.IOPinState;
 import nl.djja.rpi.gpioservice.services.GPIOService;
 import nl.djja.rpi.gpioservice.services.GPIOServiceImpl;
@@ -11,7 +12,11 @@ public class Halloow {
 
         int count = 0;
         while (count < 15) {
-            gpioService.write(26, IOPinState.HIGH);
+            try {
+                gpioService.write(26, IOPinState.HIGH);
+            } catch (IOPinManipulationException e) {
+                System.out.println(e.getMessage());
+            }
 
             try {
                 Thread.sleep(1000);
@@ -19,7 +24,11 @@ public class Halloow {
                 e.printStackTrace();
             }
 
-            gpioService.write(26, IOPinState.LOW);
+            try {
+                gpioService.write(26, IOPinState.LOW);
+            } catch (IOPinManipulationException e) {
+                System.out.println(e.getMessage());
+            }
 
             try {
                 Thread.sleep(1000);
