@@ -6,7 +6,7 @@ import nl.djja.rpi.gpioservice.iopincontrol.RPIGPIOPin;
 
 public class GPIOFactory {
     public static IOPinControl getIOPinControl(int pinNumber) {
-        return new RPIGPIOPin(pinNumber);
-//        return new FictionalIOPin(pinNumber);
+//        return new RPIGPIOPin(pinNumber);
+        return new FictionalIOPin(pinNumber);
     }
 }
