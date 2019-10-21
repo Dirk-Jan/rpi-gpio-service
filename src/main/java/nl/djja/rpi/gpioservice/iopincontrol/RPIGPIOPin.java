@@ -43,7 +43,7 @@ public class RPIGPIOPin implements IOPinControl {
         }
 
         // Per default the direction is to output
-        setDirection(IOPinDirection.OUTPUT);
+        setDirection(IOPinDirection.OUTPUT);                // FIXME This is bad design, the services relies on it setting the output, but other implementations of IOPinControl might not do that.
     }
 
     public void close() throws IOPinManipulationException {
